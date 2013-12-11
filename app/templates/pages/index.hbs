@@ -1,0 +1,25 @@
+---
+title: Index
+layout: common.hbs
+---
+
+<h1>Assemble Bug Test</h1>
+<p>Filenames that conflict variables within <code>Gruntfile.js</code> will cause task issues.</p>
+<p>In this example, there is a partial called <code>connect.hbs</code> which will interfere with the connect object in <code>Gruntfile.js</code>. Running assemble as part of a larger task such as <code>grunt serve</code> will error with: <code>Verifying property connect.livereload exists in config...ERROR</code> when the task hits <code>connect:livereload</code> or potentially any task accessing variables in <code>Gruntfile.js</code> after the <code>assemble</code> task. Simply running <code>grunt assemble</code> will be fine. You can successfully work your way to running the <code>grunt serve</code> task by running <code>grunt assemble</code> manually first, and then commenting out the <code>clean:server</code> and <code>assemble</code> tasks to serve the manually assembled code in temp.</p>
+<p>You won't notice the issue straight away if <code>grunt serve</code> is already running, but the next time you go to start the server or build you will be baffled as to why something that was just working suddenly errors. Rename the file and the project will run again.</p>
+
+<h2>Steps to reproduce</h2>
+<ol>
+    <li>Clone this repository <code>git clone https://github.com/davechiu/assemble-io-naming-bug-test.git</code></li>
+    <li>Run <code>npm install</code></li>
+    <li>Run <code>bower install</code></li>
+    <li>Run <code>grunt serve</code></li>
+    <li>Rename <code>app/templates/partials/!connect.hbs</code> to <code>app/templates/partials/connect.hbs</code></li>
+    <li>See that everything is still running</li>
+    <li>Stop the server <code>^C</code></li>
+    <li>Restart the server <code>grunt serve</code></li>
+    <li>Error.</li>
+</ol>
+
+<h2>Suggestion</h2>
+<p>Perhaps throw a warning about name conflicts?</p>
